@@ -1,3 +1,7 @@
+---
+name: pay-for-http-request
+description: Make HTTP requests with automatic x402 payment support using the purl command line interface.
+---
 # pay-for-http-request
 
 Make HTTP requests with automatic x402 payment support using `purl`.
