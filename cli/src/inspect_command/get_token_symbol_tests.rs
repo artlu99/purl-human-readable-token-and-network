@@ -69,11 +69,7 @@ fn test_get_token_symbol_extra_fake() {
 
 #[test]
 fn test_get_token_symbol_fallback() {
-    let requirement = create_test_requirement(
-        "eip155:8453",
-        "0xunknown_token",
-        None,
-    );
+    let requirement = create_test_requirement("eip155:8453", "0xunknown_token", None);
     let (symbol, seller_provided) = get_token_symbol(&requirement);
     assert_eq!(symbol, "0xunknown_token");
     assert!(!seller_provided);

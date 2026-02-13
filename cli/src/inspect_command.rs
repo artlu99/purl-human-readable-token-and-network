@@ -42,9 +42,7 @@ fn format_amount(atomic: &str, decimals: u8, symbol: &str) -> String {
 }
 
 /// Get token symbol and whether it came from seller-provided `extra["symbol"]` field
-fn get_token_symbol(
-    requirement: &purl_lib::x402::PaymentRequirements,
-) -> (String, bool) {
+fn get_token_symbol(requirement: &purl_lib::x402::PaymentRequirements) -> (String, bool) {
     purl_lib::constants::get_token_symbol(requirement.network(), requirement.asset())
         .map(|sym| (sym.to_string(), false))
         .or_else(|| {
@@ -134,23 +132,21 @@ fn build_inspect_output(
                 .as_ref()
                 .map(|a| a.to_string())
                 .unwrap_or_else(|_| "invalid".to_string());
-            let amount_human = decimals
-                .zip(amount_result.ok())
-                .map(|(dec, amt)| {
-                    format!(
-                        "{} ({})",
-                        format_amount(
-                            &amt.to_string(),
-                            dec,
-                            &(if seller_provided {
-                                Cow::Owned(format!("\"{}\"", symbol))
-                            } else {
-                                Cow::Borrowed(&symbol)
-                            }),
-                        ),
-                        purl_lib::network::resolve_network_alias(req.network())
-                    )
-                });
+            let amount_human = decimals.zip(amount_result.ok()).map(|(dec, amt)| {
+                format!(
+                    "{} ({})",
+                    format_amount(
+                        &amt.to_string(),
+                        dec,
+                        &(if seller_provided {
+                            Cow::Owned(format!("\"{}\"", symbol))
+                        } else {
+                            Cow::Borrowed(&symbol)
+                        }),
+                    ),
+                    purl_lib::network::resolve_network_alias(req.network())
+                )
+            });
 
             AcceptedPaymentOption {
                 network: req.network().to_string(),
